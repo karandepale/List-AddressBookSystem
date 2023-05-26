@@ -80,7 +80,68 @@ class Program
             Console.WriteLine();
         }
 
+        Console.WriteLine("Enter the first name of the contact to edit (or 'quit' to exit):");
+        string searchFirstName = Console.ReadLine();
+
+        if (searchFirstName.ToLower() != "quit")
+        {
+            Console.WriteLine("Enter the last name of the contact to edit:");
+            string searchLastName = Console.ReadLine();
+
+            Contact foundContact = addressBook.Find(contact =>
+                contact.FirstName.ToLower() == searchFirstName.ToLower() &&
+                contact.LastName.ToLower() == searchLastName.ToLower());
+
+            if (foundContact != null)
+            {
+                Console.WriteLine("Contact found. Enter updated details:");
+
+                Console.Write("First Name: ");
+                foundContact.FirstName = Console.ReadLine();
+
+                Console.Write("Last Name: ");
+                foundContact.LastName = Console.ReadLine();
+
+                Console.Write("Address: ");
+                foundContact.Address = Console.ReadLine();
+
+                Console.Write("City: ");
+                foundContact.City = Console.ReadLine();
+
+                Console.Write("State: ");
+                foundContact.State = Console.ReadLine();
+
+                Console.Write("ZIP: ");
+                foundContact.Zip = Console.ReadLine();
+
+                Console.Write("Phone Number: ");
+                foundContact.PhoneNumber = Console.ReadLine();
+
+                Console.Write("Email: ");
+                foundContact.Email = Console.ReadLine();
+
+                Console.WriteLine("Contact updated successfully!\n");
+            }
+            else
+            {
+                Console.WriteLine("Contact not found.\n");
+            }
+        }
+
+        Console.WriteLine("\nUpdated Address Book:");
+        foreach (Contact contact in addressBook)
+        {
+            Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
+            Console.WriteLine($"Address: {contact.Address}");
+            Console.WriteLine($"City: {contact.City}");
+            Console.WriteLine($"State: {contact.State}");
+            Console.WriteLine($"ZIP: {contact.Zip}");
+            Console.WriteLine($"Phone: {contact.PhoneNumber}");
+            Console.WriteLine($"Email: {contact.Email}");
+            Console.WriteLine();
+        }
+
         Console.WriteLine("Press any key to exit...");
-        Console.ReadKey(); 
+        Console.ReadKey();
     }
 }
