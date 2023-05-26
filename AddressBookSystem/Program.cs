@@ -80,12 +80,12 @@ class Program
             Console.WriteLine();
         }
 
-        Console.WriteLine("Enter the first name of the contact to edit (or 'quit' to exit):");
+        Console.WriteLine("Enter the first name of the contact to edit/delete (or 'quit' to exit):");
         string searchFirstName = Console.ReadLine();
 
         if (searchFirstName.ToLower() != "quit")
         {
-            Console.WriteLine("Enter the last name of the contact to edit:");
+            Console.WriteLine("Enter the last name of the contact to edit/delete:");
             string searchLastName = Console.ReadLine();
 
             Contact foundContact = addressBook.Find(contact =>
@@ -94,33 +94,49 @@ class Program
 
             if (foundContact != null)
             {
-                Console.WriteLine("Contact found. Enter updated details:");
+                Console.WriteLine("Contact found. Enter 'edit' to edit or 'delete' to delete the contact:");
 
-                Console.Write("First Name: ");
-                foundContact.FirstName = Console.ReadLine();
+                string action = Console.ReadLine().ToLower();
 
-                Console.Write("Last Name: ");
-                foundContact.LastName = Console.ReadLine();
+                if (action == "edit")
+                {
+                    Console.WriteLine("Enter updated details:");
 
-                Console.Write("Address: ");
-                foundContact.Address = Console.ReadLine();
+                    Console.Write("First Name: ");
+                    foundContact.FirstName = Console.ReadLine();
 
-                Console.Write("City: ");
-                foundContact.City = Console.ReadLine();
+                    Console.Write("Last Name: ");
+                    foundContact.LastName = Console.ReadLine();
 
-                Console.Write("State: ");
-                foundContact.State = Console.ReadLine();
+                    Console.Write("Address: ");
+                    foundContact.Address = Console.ReadLine();
 
-                Console.Write("ZIP: ");
-                foundContact.Zip = Console.ReadLine();
+                    Console.Write("City: ");
+                    foundContact.City = Console.ReadLine();
 
-                Console.Write("Phone Number: ");
-                foundContact.PhoneNumber = Console.ReadLine();
+                    Console.Write("State: ");
+                    foundContact.State = Console.ReadLine();
 
-                Console.Write("Email: ");
-                foundContact.Email = Console.ReadLine();
+                    Console.Write("ZIP: ");
+                    foundContact.Zip = Console.ReadLine();
 
-                Console.WriteLine("Contact updated successfully!\n");
+                    Console.Write("Phone Number: ");
+                    foundContact.PhoneNumber = Console.ReadLine();
+
+                    Console.Write("Email: ");
+                    foundContact.Email = Console.ReadLine();
+
+                    Console.WriteLine("Contact updated successfully!\n");
+                }
+                else if (action == "delete")
+                {
+                    addressBook.Remove(foundContact);
+                    Console.WriteLine("Contact deleted successfully!\n");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid action. No changes made.\n");
+                }
             }
             else
             {
