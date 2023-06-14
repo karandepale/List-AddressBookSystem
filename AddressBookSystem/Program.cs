@@ -11,6 +11,23 @@ class Contact
     public string Zip { get; set; }
     public string PhoneNumber { get; set; }
     public string Email { get; set; }
+
+    public override bool Equals(object obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+
+        Contact other = (Contact)obj;
+        return string.Equals(FirstName, other.FirstName, StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(LastName, other.LastName, StringComparison.OrdinalIgnoreCase);
+    }
+
+    public override int GetHashCode()
+    {
+        return StringComparer.OrdinalIgnoreCase.GetHashCode(FirstName) ^ StringComparer.OrdinalIgnoreCase.GetHashCode(LastName);
+    }
 }
 
 class Program
@@ -80,9 +97,15 @@ class Program
                             Email = email
                         };
 
-                        addressBooks[addressBookName].Add(contact);
-
-                        Console.WriteLine("Contact added successfully!\n");
+                        if (!addressBooks[addressBookName].Contains(contact))
+                        {
+                            addressBooks[addressBookName].Add(contact);
+                            Console.WriteLine("Contact added successfully!\n");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Duplicate contact. Contact not added.\n");
+                        }
                     }
                 }
                 else
