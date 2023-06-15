@@ -140,17 +140,17 @@ class Program
             Console.WriteLine();
         }
 
-        Console.WriteLine("Enter the name of the address book to edit/delete (or 'quit' to exit):");
+        Console.WriteLine("Enter the name of the address book to edit/delete or search (or 'quit' to exit):");
         string searchAddressBookName = Console.ReadLine();
 
         if (searchAddressBookName.ToLower() != "quit")
         {
             if (addressBooks.ContainsKey(searchAddressBookName))
             {
-                Console.WriteLine("Enter the first name of the contact to edit/delete:");
+                Console.WriteLine("Enter the first name of the contact to edit/delete or search:");
                 string searchFirstName = Console.ReadLine();
 
-                Console.WriteLine("Enter the last name of the contact to edit/delete:");
+                Console.WriteLine("Enter the last name of the contact to edit/delete or search:");
                 string searchLastName = Console.ReadLine();
 
                 Contact foundContact = addressBooks[searchAddressBookName].Find(contact =>
@@ -159,7 +159,7 @@ class Program
 
                 if (foundContact != null)
                 {
-                    Console.WriteLine("Contact found. Enter 'edit' to edit or 'delete' to delete the contact:");
+                    Console.WriteLine("Contact found. Enter 'edit' to edit, 'delete' to delete, or 'search' to search again:");
 
                     string action = Console.ReadLine().ToLower();
 
@@ -197,6 +197,30 @@ class Program
                     {
                         addressBooks[searchAddressBookName].Remove(foundContact);
                         Console.WriteLine("Contact deleted successfully!\n");
+                    }
+                    else if (action == "search")
+                    {
+                        List<Contact> searchResults = SearchContacts(addressBooks, foundContact.City, foundContact.State);
+
+                        if (searchResults.Count > 0)
+                        {
+                            Console.WriteLine("Search Results:");
+                            foreach (Contact contact in searchResults)
+                            {
+                                Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
+                                Console.WriteLine($"Address: {contact.Address}");
+                                Console.WriteLine($"City: {contact.City}");
+                                Console.WriteLine($"State: {contact.State}");
+                                Console.WriteLine($"ZIP: {contact.Zip}");
+                                Console.WriteLine($"Phone: {contact.PhoneNumber}");
+                                Console.WriteLine($"Email: {contact.Email}");
+                                Console.WriteLine();
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("No contacts found in the specified city or state.");
+                        }
                     }
                     else
                     {
@@ -237,5 +261,25 @@ class Program
 
         Console.WriteLine("Press any key to exit...");
         Console.ReadKey();
+    }
+
+    static List<Contact> SearchContacts(Dictionary<string, List<Contact>> addressBooks, string city, string state)
+    {
+        List<Contact> searchResults = new List<Contact>();
+
+        foreach (var addressBookEntry in addressBooks)
+        {
+            List<Contact> contacts = addressBookEntry.Value;
+
+            foreach (Contact contact in contacts)
+            {
+                if (contact.City.ToLower() == city.ToLower() || contact.State.ToLower() == state.ToLower())
+                {
+                    searchResults.Add(contact);
+                }
+            }
+        }
+
+        return searchResults;
     }
 }
