@@ -36,6 +36,8 @@ class Program
     {
         Console.WriteLine("Welcome to Address Book Program");
         Dictionary<string, List<Contact>> addressBooks = new Dictionary<string, List<Contact>>();
+        Dictionary<string, List<Contact>> cityDictionary = new Dictionary<string, List<Contact>>();
+        Dictionary<string, List<Contact>> stateDictionary = new Dictionary<string, List<Contact>>();
 
         while (true)
         {
@@ -101,6 +103,20 @@ class Program
                         {
                             addressBooks[addressBookName].Add(contact);
                             Console.WriteLine("Contact added successfully!\n");
+
+                            // Add contact to city dictionary
+                            if (!cityDictionary.ContainsKey(city))
+                            {
+                                cityDictionary[city] = new List<Contact>();
+                            }
+                            cityDictionary[city].Add(contact);
+
+                            // Add contact to state dictionary
+                            if (!stateDictionary.ContainsKey(state))
+                            {
+                                stateDictionary[state] = new List<Contact>();
+                            }
+                            stateDictionary[state].Add(contact);
                         }
                         else
                         {
@@ -200,7 +216,13 @@ class Program
                     }
                     else if (action == "search")
                     {
-                        List<Contact> searchResults = SearchContacts(addressBooks, foundContact.City, foundContact.State);
+                        Console.WriteLine("Enter the city to search:");
+                        string searchCity = Console.ReadLine();
+
+                        Console.WriteLine("Enter the state to search:");
+                        string searchState = Console.ReadLine();
+
+                        List<Contact> searchResults = SearchContacts(cityDictionary, stateDictionary, searchCity, searchState);
 
                         if (searchResults.Count > 0)
                         {
@@ -263,21 +285,18 @@ class Program
         Console.ReadKey();
     }
 
-    static List<Contact> SearchContacts(Dictionary<string, List<Contact>> addressBooks, string city, string state)
+    static List<Contact> SearchContacts(Dictionary<string, List<Contact>> cityDictionary, Dictionary<string, List<Contact>> stateDictionary, string city, string state)
     {
         List<Contact> searchResults = new List<Contact>();
 
-        foreach (var addressBookEntry in addressBooks)
+        if (cityDictionary.ContainsKey(city.ToLower()))
         {
-            List<Contact> contacts = addressBookEntry.Value;
+            searchResults.AddRange(cityDictionary[city.ToLower()]);
+        }
 
-            foreach (Contact contact in contacts)
-            {
-                if (contact.City.ToLower() == city.ToLower() || contact.State.ToLower() == state.ToLower())
-                {
-                    searchResults.Add(contact);
-                }
-            }
+        if (stateDictionary.ContainsKey(state.ToLower()))
+        {
+            searchResults.AddRange(stateDictionary[state.ToLower()]);
         }
 
         return searchResults;
