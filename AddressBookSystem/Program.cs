@@ -222,28 +222,14 @@ class Program
                         Console.WriteLine("Enter the state to search:");
                         string searchState = Console.ReadLine();
 
-                        List<Contact> searchResults = SearchContacts(cityDictionary, stateDictionary, searchCity, searchState);
+                        Dictionary<string, int> searchResults = SearchContacts(cityDictionary, stateDictionary, searchCity, searchState);
 
-                        if (searchResults.Count > 0)
-                        {
-                            Console.WriteLine("Search Results:");
-                            foreach (Contact contact in searchResults)
-                            {
-                                Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
-                                Console.WriteLine($"Address: {contact.Address}");
-                                Console.WriteLine($"City: {contact.City}");
-                                Console.WriteLine($"State: {contact.State}");
-                                Console.WriteLine($"ZIP: {contact.Zip}");
-                                Console.WriteLine($"Phone: {contact.PhoneNumber}");
-                                Console.WriteLine($"Email: {contact.Email}");
-                                Console.WriteLine();
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("No contacts found in the specified city or state.");
-                        }
+                        Console.WriteLine("Search Results:");
+                        Console.WriteLine($"Count by City: {searchResults["City"]}");
+                        Console.WriteLine($"Count by State: {searchResults["State"]}");
+                        Console.WriteLine();
                     }
+
                     else
                     {
                         Console.WriteLine("Invalid action. No changes made.\n");
@@ -285,20 +271,29 @@ class Program
         Console.ReadKey();
     }
 
-    static List<Contact> SearchContacts(Dictionary<string, List<Contact>> cityDictionary, Dictionary<string, List<Contact>> stateDictionary, string city, string state)
+    static Dictionary<string, int> SearchContacts(Dictionary<string, List<Contact>> cityDictionary, Dictionary<string, List<Contact>> stateDictionary, string city, string state)
     {
-        List<Contact> searchResults = new List<Contact>();
+        Dictionary<string, int> searchResults = new Dictionary<string, int>();
 
         if (cityDictionary.ContainsKey(city.ToLower()))
         {
-            searchResults.AddRange(cityDictionary[city.ToLower()]);
+            searchResults["City"] = cityDictionary[city.ToLower()].Count;
+        }
+        else
+        {
+            searchResults["City"] = 0;
         }
 
         if (stateDictionary.ContainsKey(state.ToLower()))
         {
-            searchResults.AddRange(stateDictionary[state.ToLower()]);
+            searchResults["State"] = stateDictionary[state.ToLower()].Count;
+        }
+        else
+        {
+            searchResults["State"] = 0;
         }
 
         return searchResults;
     }
+
 }
