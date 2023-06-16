@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 class Contact : IComparable<Contact>
 {
@@ -230,20 +231,38 @@ class Program
                     }
                     else if (action == "search")
                     {
-                        Console.WriteLine("Enter the city to search:");
-                        string searchCity = Console.ReadLine();
+                        Console.WriteLine("Enter the sorting option ('city', 'state', 'zip'):");
+                        string sortingOption = Console.ReadLine().ToLower();
 
-                        Console.WriteLine("Enter the state to search:");
-                        string searchState = Console.ReadLine();
+                        List<Contact> sortedContacts = new List<Contact>();
 
-                        Dictionary<string, int> searchResults = SearchContacts(cityDictionary, stateDictionary, searchCity, searchState);
+                        if (sortingOption == "city")
+                        {
+                            if (cityDictionary.ContainsKey(foundContact.City))
+                            {
+                                sortedContacts = cityDictionary[foundContact.City];
+                            }
+                        }
+                        else if (sortingOption == "state")
+                        {
+                            if (stateDictionary.ContainsKey(foundContact.State))
+                            {
+                                sortedContacts = stateDictionary[foundContact.State];
+                            }
+                        }
+                        else if (sortingOption == "zip")
+                        {
+                            sortedContacts = addressBooks[searchAddressBookName];
+                            sortedContacts.Sort((c1, c2) => c1.Zip.CompareTo(c2.Zip));
+                        }
 
                         Console.WriteLine("Search Results:");
-                        Console.WriteLine($"Count by City: {searchResults["City"]}");
-                        Console.WriteLine($"Count by State: {searchResults["State"]}");
+                        foreach (Contact contact in sortedContacts)
+                        {
+                            Console.WriteLine(contact.ToString());
+                        }
                         Console.WriteLine();
                     }
-
                     else
                     {
                         Console.WriteLine("Invalid action. No changes made.\n");
