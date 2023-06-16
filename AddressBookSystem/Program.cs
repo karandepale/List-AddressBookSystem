@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 class Contact : IComparable<Contact>
@@ -293,8 +294,65 @@ class Program
             Console.WriteLine();
         }
 
+        // Write address book data to a text file
+        string path = @"C:\Users\Karan Depale\RFC285\AddressBookSystem\List-AddressBookSystem\AddressBookSystem\FileIOTextFile.txt";
+        WriteAddressBookDataToFile(path, addressBooks);
+
+        // Read address book data from the text file
+        ReadAddressBookDataFromFile(path);
+
         Console.WriteLine("Press any key to exit...");
         Console.ReadKey();
+    }
+
+    static void WriteAddressBookDataToFile(string path, Dictionary<string, List<Contact>> addressBooks)
+    {
+        try
+        {
+            using (StreamWriter file = new StreamWriter(path))
+            {
+                foreach (var addressBookEntry in addressBooks)
+                {
+                    string addressBookName = addressBookEntry.Key;
+                    List<Contact> contacts = addressBookEntry.Value;
+
+                    file.WriteLine($"Address Book: {addressBookName}");
+                    foreach (Contact contact in contacts)
+                    {
+                        file.WriteLine(contact.ToString());
+                    }
+                    file.WriteLine();
+                }
+            }
+
+            Console.WriteLine($"Address book data written to the file: {path}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error occurred while writing address book data to the file: {ex.Message}");
+        }
+    }
+
+    static void ReadAddressBookDataFromFile(string path)
+    {
+        try
+        {
+            using (StreamReader file = new StreamReader(path))
+            {
+                string line;
+                Console.WriteLine($"Reading address book data from the file: {path}");
+                Console.WriteLine();
+
+                while ((line = file.ReadLine()) != null)
+                {
+                    Console.WriteLine(line);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error occurred while reading address book data from the file: {ex.Message}");
+        }
     }
 
     static Dictionary<string, int> SearchContacts(Dictionary<string, List<Contact>> cityDictionary, Dictionary<string, List<Contact>> stateDictionary, string city, string state)
@@ -320,16 +378,5 @@ class Program
         }
 
         return searchResults;
-    }
-}
-
-class PersonNameComparer : IComparer<Contact>
-{
-    public int Compare(Contact x, Contact y)
-    {
-        string nameX = $"{x.FirstName} {x.LastName}";
-        string nameY = $"{y.FirstName} {y.LastName}";
-
-        return StringComparer.OrdinalIgnoreCase.Compare(nameX, nameY);
     }
 }
