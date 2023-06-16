@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-class Contact
+class Contact : IComparable<Contact>
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -27,6 +27,27 @@ class Contact
     public override int GetHashCode()
     {
         return StringComparer.OrdinalIgnoreCase.GetHashCode(FirstName) ^ StringComparer.OrdinalIgnoreCase.GetHashCode(LastName);
+    }
+
+    public int CompareTo(Contact other)
+    {
+        int result = string.Compare(FirstName, other.FirstName, StringComparison.OrdinalIgnoreCase);
+        if (result == 0)
+        {
+            result = string.Compare(LastName, other.LastName, StringComparison.OrdinalIgnoreCase);
+        }
+        return result;
+    }
+
+    public override string ToString()
+    {
+        return $"Name: {FirstName} {LastName}\n" +
+               $"Address: {Address}\n" +
+               $"City: {City}\n" +
+               $"State: {State}\n" +
+               $"ZIP: {Zip}\n" +
+               $"Phone: {PhoneNumber}\n" +
+               $"Email: {Email}\n";
     }
 }
 
@@ -144,14 +165,7 @@ class Program
             Console.WriteLine($"Address Book: {addressBookName}");
             foreach (Contact contact in contacts)
             {
-                Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
-                Console.WriteLine($"Address: {contact.Address}");
-                Console.WriteLine($"City: {contact.City}");
-                Console.WriteLine($"State: {contact.State}");
-                Console.WriteLine($"ZIP: {contact.Zip}");
-                Console.WriteLine($"Phone: {contact.PhoneNumber}");
-                Console.WriteLine($"Email: {contact.Email}");
-                Console.WriteLine();
+                Console.WriteLine(contact.ToString());
             }
             Console.WriteLine();
         }
@@ -255,14 +269,7 @@ class Program
             Console.WriteLine($"Address Book: {addressBookName}");
             foreach (Contact contact in contacts)
             {
-                Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
-                Console.WriteLine($"Address: {contact.Address}");
-                Console.WriteLine($"City: {contact.City}");
-                Console.WriteLine($"State: {contact.State}");
-                Console.WriteLine($"ZIP: {contact.Zip}");
-                Console.WriteLine($"Phone: {contact.PhoneNumber}");
-                Console.WriteLine($"Email: {contact.Email}");
-                Console.WriteLine();
+                Console.WriteLine(contact.ToString());
             }
             Console.WriteLine();
         }
@@ -295,5 +302,15 @@ class Program
 
         return searchResults;
     }
+}
 
+class PersonNameComparer : IComparer<Contact>
+{
+    public int Compare(Contact x, Contact y)
+    {
+        string nameX = $"{x.FirstName} {x.LastName}";
+        string nameY = $"{y.FirstName} {y.LastName}";
+
+        return StringComparer.OrdinalIgnoreCase.Compare(nameX, nameY);
+    }
 }
