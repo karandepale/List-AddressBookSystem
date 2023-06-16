@@ -1,10 +1,10 @@
-Address Book: MERA NAAM NAYA
-Name: krishna deple
-Address: balsamund
-City: khargone
-State: mp
-ZIP: 2232
-Phone: 4857857945
-Email: test@gmail.com
+Address Book: My Personal Data
+Name: Karan Depale
+Address: Village kasrawad
+City: Khargone
+State: madhya pradesh
+ZIP: 451228
+Phone: 1234567895
+Email: Test@gmail.com
 
 
