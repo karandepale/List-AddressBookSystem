@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 
 class Contact : IComparable<Contact>
 {
@@ -294,35 +295,25 @@ class Program
             Console.WriteLine();
         }
 
-        // Write address book data to a text file
-        string path = @"C:\Users\Karan Depale\RFC285\AddressBookSystem\List-AddressBookSystem\AddressBookSystem\FileIOTextFile.txt";
-        WriteAddressBookDataToFile(path, addressBooks);
+        // Write address book data to a JSON file
+        string path = @"C:\Users\Karan Depale\RFC285\AddressBookSystem\List-AddressBookSystem\AddressBookSystem\JSONDATA.json";
+        WriteAddressBookDataToJsonFile(path, addressBooks);
 
-        // Read address book data from the text file
-        ReadAddressBookDataFromFile(path);
+        // Read address book data from the JSON file
+        ReadAddressBookDataFromJsonFile(path);
 
         Console.WriteLine("Press any key to exit...");
         Console.ReadKey();
     }
 
-    static void WriteAddressBookDataToFile(string path, Dictionary<string, List<Contact>> addressBooks)
+    static void WriteAddressBookDataToJsonFile(string path, Dictionary<string, List<Contact>> addressBooks)
     {
         try
         {
             using (StreamWriter file = new StreamWriter(path))
             {
-                foreach (var addressBookEntry in addressBooks)
-                {
-                    string addressBookName = addressBookEntry.Key;
-                    List<Contact> contacts = addressBookEntry.Value;
-
-                    file.WriteLine($"Address Book: {addressBookName}");
-                    foreach (Contact contact in contacts)
-                    {
-                        file.WriteLine(contact.ToString());
-                    }
-                    file.WriteLine();
-                }
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(addressBooks);
+                file.WriteLine(json);
             }
 
             Console.WriteLine($"Address book data written to the file: {path}");
@@ -333,19 +324,29 @@ class Program
         }
     }
 
-    static void ReadAddressBookDataFromFile(string path)
+    static void ReadAddressBookDataFromJsonFile(string path)
     {
         try
         {
             using (StreamReader file = new StreamReader(path))
             {
-                string line;
+                string json = file.ReadToEnd();
+                Dictionary<string, List<Contact>> addressBooks = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, List<Contact>>>(json);
+
                 Console.WriteLine($"Reading address book data from the file: {path}");
                 Console.WriteLine();
 
-                while ((line = file.ReadLine()) != null)
+                foreach (var addressBookEntry in addressBooks)
                 {
-                    Console.WriteLine(line);
+                    string addressBookName = addressBookEntry.Key;
+                    List<Contact> contacts = addressBookEntry.Value;
+
+                    Console.WriteLine($"Address Book: {addressBookName}");
+                    foreach (Contact contact in contacts)
+                    {
+                        Console.WriteLine(contact.ToString());
+                    }
+                    Console.WriteLine();
                 }
             }
         }
