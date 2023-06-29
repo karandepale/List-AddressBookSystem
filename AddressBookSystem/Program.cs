@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AddressBookSystem;
 using Newtonsoft.Json;
+using System.Data.SqlClient;
+
 
 class Contact : IComparable<Contact>
 {
@@ -11,7 +14,7 @@ class Contact : IComparable<Contact>
     public string Address { get; set; }
     public string City { get; set; }
     public string State { get; set; }
-    public string Zip { get; set; }
+    public int Zip { get; set; }
     public string PhoneNumber { get; set; }
     public string Email { get; set; }
 
@@ -63,6 +66,12 @@ class Program
         Dictionary<string, List<Contact>> cityDictionary = new Dictionary<string, List<Contact>>();
         Dictionary<string, List<Contact>> stateDictionary = new Dictionary<string, List<Contact>>();
 
+        // Create DB:-
+        DataBaseService DB = new DataBaseService();
+        //DB.CreateDataBase();
+       // DB.CreateTable();
+
+
         while (true)
         {
             Console.WriteLine("Enter a command ('new' to create a new address book, 'quit' to exit):");
@@ -103,7 +112,7 @@ class Program
                         string state = Console.ReadLine();
 
                         Console.Write("ZIP: ");
-                        string zip = Console.ReadLine();
+                        int zip =Convert.ToInt32(Console.ReadLine());
 
                         Console.Write("Phone Number: ");
                         string phoneNumber = Console.ReadLine();
@@ -122,6 +131,7 @@ class Program
                             PhoneNumber = phoneNumber,
                             Email = email
                         };
+
 
                         if (!addressBooks[addressBookName].Contains(contact))
                         {
@@ -146,6 +156,10 @@ class Program
                         {
                             Console.WriteLine("Duplicate contact. Contact not added.\n");
                         }
+
+                        DB.InsertContact(contact);
+
+
                     }
                 }
                 else
@@ -216,7 +230,7 @@ class Program
                         foundContact.State = Console.ReadLine();
 
                         Console.Write("ZIP: ");
-                        foundContact.Zip = Console.ReadLine();
+                        foundContact.Zip =Convert.ToInt32( Console.ReadLine());
 
                         Console.Write("Phone Number: ");
                         foundContact.PhoneNumber = Console.ReadLine();
@@ -380,4 +394,5 @@ class Program
 
         return searchResults;
     }
+
 }
