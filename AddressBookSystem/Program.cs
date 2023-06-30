@@ -72,6 +72,11 @@ class Program
         //DB.CreateDataBase();
         // DB.CreateTable();
 
+        Console.WriteLine("Enter the first name of the contact to delete:");
+        string deleteFirstName = Console.ReadLine();
+
+        DB.DeleteContact(deleteFirstName);
+
 
         while (true)
         {

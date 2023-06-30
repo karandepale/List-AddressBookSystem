@@ -143,6 +143,37 @@ namespace AddressBookSystem
 
 
 
+        public void DeleteContact(string firstName)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    string query = "DELETE FROM AddressBookData WHERE FirstName = @FirstName";
+
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@FirstName", firstName);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine($"Contact with the first name '{firstName}' deleted successfully from the database!\n");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Contact with the first name '{firstName}' not found in the database.\n");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred while deleting contact from the database: {ex.Message}");
+            }
+        }
+
+
 
 
     }
