@@ -5,6 +5,7 @@ using System.Linq;
 using AddressBookSystem;
 using Newtonsoft.Json;
 using System.Data.SqlClient;
+using System.Net;
 
 
 class Contact : IComparable<Contact>
@@ -69,7 +70,7 @@ class Program
         // Create DB:-
         DataBaseService DB = new DataBaseService();
         //DB.CreateDataBase();
-       // DB.CreateTable();
+        // DB.CreateTable();
 
 
         while (true)
@@ -112,7 +113,7 @@ class Program
                         string state = Console.ReadLine();
 
                         Console.Write("ZIP: ");
-                        int zip =Convert.ToInt32(Console.ReadLine());
+                        int zip = Convert.ToInt32(Console.ReadLine());
 
                         Console.Write("Phone Number: ");
                         string phoneNumber = Console.ReadLine();
@@ -215,28 +216,43 @@ class Program
                         Console.WriteLine("Enter updated details:");
 
                         Console.Write("First Name: ");
-                        foundContact.FirstName = Console.ReadLine();
+                        string newFirstName = Console.ReadLine();
 
                         Console.Write("Last Name: ");
-                        foundContact.LastName = Console.ReadLine();
+                        string lastName = Console.ReadLine();
 
                         Console.Write("Address: ");
-                        foundContact.Address = Console.ReadLine();
+                        string address = Console.ReadLine();
 
                         Console.Write("City: ");
-                        foundContact.City = Console.ReadLine();
+                        string city = Console.ReadLine();
 
                         Console.Write("State: ");
-                        foundContact.State = Console.ReadLine();
+                        string state = Console.ReadLine();
 
                         Console.Write("ZIP: ");
-                        foundContact.Zip =Convert.ToInt32( Console.ReadLine());
+                        int zip = Convert.ToInt32(Console.ReadLine());
 
                         Console.Write("Phone Number: ");
-                        foundContact.PhoneNumber = Console.ReadLine();
+                        string phoneNumber = Console.ReadLine();
 
                         Console.Write("Email: ");
-                        foundContact.Email = Console.ReadLine();
+                        string email = Console.ReadLine();
+
+                        Contact newContact = new Contact
+                        {
+                            FirstName = newFirstName,
+                            LastName = lastName,
+                            Address = address,
+                            City = city,
+                            State = state,
+                            Zip = zip,
+                            PhoneNumber = phoneNumber,
+                            Email = email
+                        };
+
+                        // Update the contact in the database
+                        DB.UpdateContact(searchFirstName, newContact);
 
                         Console.WriteLine("Contact updated successfully!\n");
                     }
