@@ -176,6 +176,57 @@ namespace AddressBookSystem
 
 
 
+        public List<Contact> GetContactsAddedInPeriod(DateTime startDate, DateTime endDate)
+        {
+            List<Contact> contacts = new List<Contact>();
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    string query = "SELECT * FROM AddressBookData " +
+                                   "WHERE CreatedDate >= @StartDate AND CreatedDate <= @EndDate";
+
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@StartDate", startDate);
+                    cmd.Parameters.AddWithValue("@EndDate", endDate);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Contact contact = new Contact
+                        {
+                            FirstName = reader["FirstName"].ToString(),
+                            LastName = reader["LastName"].ToString(),
+                            Address = reader["Address"].ToString(),
+                            City = reader["City"].ToString(),
+                            State = reader["State"].ToString(),
+                            Zip = Convert.ToInt32(reader["Zip"]),
+                            PhoneNumber = reader["Phone"].ToString(),
+                            Email = reader["Email"].ToString()
+                        };
+
+                        contacts.Add(contact);
+                    }
+
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred while retrieving contacts from the database: {ex.Message}");
+            }
+
+            return contacts;
+        }
+
+
+
+
+
     }
 
 }

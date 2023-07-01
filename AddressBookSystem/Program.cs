@@ -72,6 +72,19 @@ class Program
         //DB.CreateDataBase();
         // DB.CreateTable();
 
+
+        DateTime startDate = new DateTime(2023, 6, 1);
+        DateTime endDate = new DateTime(2023, 6, 30);
+
+        List<Contact> contactsAddedInJune = DB.GetContactsAddedInPeriod(startDate, endDate);
+
+        Console.WriteLine("Contacts added in June 2023:");
+        foreach (Contact contact in contactsAddedInJune)
+        {
+            Console.WriteLine(contact.ToString());
+        }
+
+
         Console.WriteLine("Enter the first name of the contact to delete:");
         string deleteFirstName = Console.ReadLine();
 
